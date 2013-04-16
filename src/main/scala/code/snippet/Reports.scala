@@ -6,7 +6,7 @@ import org.pentaho.reporting.engine.classic.core.{MasterReport, ClassicEngineBoo
 import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfReportUtil
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager
 import java.net.URL
-import java.io.{FileOutputStream}
+import java.io.FileOutputStream
 import net.liftweb.http._
 import net.liftweb.common.Logger
 
@@ -35,9 +35,24 @@ class Reports extends Logger {
     PdfReportUtil.createPDF(report, new FileOutputStream(filePath))
   }
 
+  def saveAndOpenWithParameters {
+    val manager = new ResourceManager
+    manager.registerDefaults
+    val reportPath = "file:reports/paramreport.prpt"
+    val fileName = randomString(80)
+    val filePath = "output/" + fileName + ".pdf"
+    val res = manager.createDirectly(new URL(reportPath), classOf[MasterReport])
+    val report = res.getResource.asInstanceOf[MasterReport]
+    report.getParameterValues.put("Param1","10")
+    report.getParameterValues.put("Param2",now)
+    PdfReportUtil.createPDF(report, new FileOutputStream(filePath))
+    S.redirectTo("report/" + fileName)
+  }
+
   def render = {
     "type=submit #ver1" #> SHtml.submit("Generate PDF ver 1", () => saveToDisk) &
-      "type=submit #ver2" #> SHtml.submit("Generate PDF ver 2", () => saveAndOpen)
+      "type=submit #ver2" #> SHtml.submit("Generate PDF ver 2", () => saveAndOpen) &
+      "type=submit #ver3" #> SHtml.submit("Open with paramters", () => saveAndOpenWithParameters)
   }
 
 
