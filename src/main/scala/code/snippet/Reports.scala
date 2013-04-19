@@ -2,58 +2,21 @@ package code.snippet
 
 import net.liftweb._
 import util.Helpers._
-import org.pentaho.reporting.engine.classic.core.{MasterReport, ClassicEngineBoot}
-import org.pentaho.reporting.engine.classic.core.modules.output.pageable.pdf.PdfReportUtil
-import org.pentaho.reporting.libraries.resourceloader.ResourceManager
-import java.net.URL
-import java.io.FileOutputStream
 import net.liftweb.http._
 import net.liftweb.common.Logger
 
 
+import code.lib.PentahoReport
+
 class Reports extends Logger {
 
-  def saveAndOpen {
-    val manager = new ResourceManager
-    manager.registerDefaults
-    val reportPath = "file:reports/report.prpt"
-    val fileName = randomString(25)
-    val filePath = "output/" + fileName + ".pdf"
-    val res = manager.createDirectly(new URL(reportPath), classOf[MasterReport])
-    val report = res.getResource.asInstanceOf[MasterReport]
-    PdfReportUtil.createPDF(report, new FileOutputStream(filePath))
-    S.redirectTo("report/" + fileName)
-  }
-
-  def saveToDisk {
-    val manager = new ResourceManager
-    manager.registerDefaults
-    val reportPath = "file:reports/report.prpt"
-    val filePath = "output/report_test1.pdf"
-    val res = manager.createDirectly(new URL(reportPath), classOf[MasterReport])
-    val report = res.getResource.asInstanceOf[MasterReport]
-    PdfReportUtil.createPDF(report, new FileOutputStream(filePath))
-  }
-
-  def saveAndOpenWithParameters {
-    val manager = new ResourceManager
-    manager.registerDefaults
-    val reportPath = "file:reports/paramreport.prpt"
-    val fileName = randomString(80)
-    val filePath = "output/" + fileName + ".pdf"
-    val res = manager.createDirectly(new URL(reportPath), classOf[MasterReport])
-    val report = res.getResource.asInstanceOf[MasterReport]
-    report.getParameterValues.put("Param1","10")
-    report.getParameterValues.put("Param2",now)
-    PdfReportUtil.createPDF(report, new FileOutputStream(filePath))
-    S.redirectTo("report/" + fileName)
-  }
+  var name = "Someone"
 
   def render = {
-    "type=submit #ver1" #> SHtml.submit("Generate PDF ver 1", () => saveToDisk) &
-      "type=submit #ver2" #> SHtml.submit("Generate PDF ver 2", () => saveAndOpen) &
-      "type=submit #ver3" #> SHtml.submit("Open with paramters", () => saveAndOpenWithParameters)
+    "#name" #> SHtml.text(name, name = _) &
+      "type=submit #pdf" #> SHtml.submit("Open", () => PentahoReport("report")) &
+      "type=submit #pdfparam" #> SHtml.submit("Open", () => PentahoReport("report2", List(name, now), PentahoReport.PDF)) &
+      "type=submit #xls" #> SHtml.submit("Open", () => PentahoReport("report", List(), PentahoReport.XLS)) &
+      "type=submit #xlsparam" #> SHtml.submit("Open", () => PentahoReport("report2", List(name, now), PentahoReport.XLS))
   }
-
-
 }

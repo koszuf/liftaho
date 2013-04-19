@@ -11,7 +11,7 @@ import Loc._
 import net.liftmodules.JQueryModule
 import net.liftweb.http.js.jquery._
 import org.pentaho.reporting.engine.classic.core.ClassicEngineBoot
-import code.rest.Report
+import code.rest.ReportsURIHelper
 
 /**
  * A class that's instantiated early and run.  It allows the application
@@ -53,7 +53,7 @@ class Boot {
     JQueryModule.InitParam.JQuery=JQueryModule.JQuery172
     JQueryModule.init()
 
-    Report.init()
+    ReportsURIHelper.init()
 
   }
 }

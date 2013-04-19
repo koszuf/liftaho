@@ -8,7 +8,8 @@ scalaVersion := "2.10.0"
 
 resolvers ++= Seq("snapshots"     at "http://oss.sonatype.org/content/repositories/snapshots",
                 "releases"        at "http://oss.sonatype.org/content/repositories/releases",
-				"pentaho"         at "http://repository.pentaho.org/artifactory/repo"
+				"pentaho"         at "http://repository.pentaho.org/artifactory/repo",
+				"maven"          at "http://repo2.maven.org/maven"
                 )
 
 seq(com.github.siasia.WebPlugin.webSettings :_*)
@@ -19,7 +20,7 @@ scalacOptions ++= Seq("-deprecation", "-unchecked")
 
 libraryDependencies ++= {
   val liftVersion = "2.5-RC2"
-  val preVersion = "3.9.2-GA"
+  val preVersion = "3.9-SNAPSHOT"
   val plVersion = "1.2.4"
   Seq(
     "net.liftweb"       %% "lift-webkit"        % liftVersion        % "compile",
@@ -29,7 +30,7 @@ libraryDependencies ++= {
     "ch.qos.logback"    % "logback-classic"     % "1.0.6",
     "org.specs2"        % "specs2_2.10.0-M7"    % "1.12.1.1"         % "test",
 	"pentaho-reporting-engine"  % "pentaho-reporting-engine-classic-core" % preVersion % "compile",
-	//"pentaho-reporting-engine"  % "pentaho-reporting-engine-classic-extensions" % preVersion % "compile",
+	"pentaho-reporting-engine"  % "pentaho-reporting-engine-classic-extensions" % preVersion % "compile",
 	"pentaho-library"  % "libloader" % plVersion % "compile",
 	"pentaho-library"  % "libbase" % plVersion % "compile",
 	"pentaho-library"  % "libxml" % plVersion % "compile",
@@ -39,7 +40,8 @@ libraryDependencies ++= {
 	"pentaho-library"  % "libfonts" % plVersion % "compile",
 	"pentaho-library"  % "libformat" % plVersion % "compile",
 	"pentaho-library"  % "libdocbundle" % plVersion % "compile",
-	"com.lowagie"      % "itext"        %"2.1.7"    % "compile"
+	"com.lowagie"      % "itext"        %"2.1.7"    % "compile",
+	"org.apache.poi"   % "poi-ooxml"    % "3.9"     % "compile"
   )
 }
 
